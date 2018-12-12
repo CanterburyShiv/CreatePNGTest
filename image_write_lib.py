@@ -155,9 +155,9 @@ def build_image_using_palette(img_fname, palette_dict):
         subtract the y square from the x square then take the abs of it
         multiple the x coordinate and the y coordinate and then double it
         add those two together
-        take the square root of that.
+        take the square root of that.  Make sure this is an INT
         divide it by the palette_max+1 (355 in our case) and take the remainder.
-        Make sure this is an INT
+        This result should be an int (there's no reason to cast it to INT)
 
         This is your value
 
