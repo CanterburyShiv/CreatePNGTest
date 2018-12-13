@@ -45,6 +45,28 @@ def build_image_yellow(img_fname, image_x_size=512, image_y_size=512):
     create an image that is full yellow.
     Just yellow at every pixel
     """
+
+    my_image = Image.new('RGB', (512,512) )
+    my_image_pixels = my_image.load()
+
+    # get the image size
+    image_x_size = my_image.size[0]
+    image_y_size = my_image.size[1]
+
+    # iterate over x and y to pick the pixel color
+    for x in range(image_x_size):
+        for y in range(image_y_size):
+            # pick the pixel color as an RGB tuple
+            pixel_color = ( 255, 255, 0)
+
+            # set the color to the image
+            my_image_pixels[x, y] = pixel_color
+
+    # save the image
+    print(f'saving {img_fname}')
+    my_image.save(img_fname, 'png')
+
+
     pass
 
 def build_image_double_red_gradient(img_fname):
@@ -54,6 +76,7 @@ def build_image_double_red_gradient(img_fname):
     from left to right.  And when it reaches 255, start over at 0
     and start another gradient from 0 to 255.
     """
+    
     pass
 
 def build_image_single_red_gradient(img_fname):
@@ -129,7 +152,7 @@ def build_image_banding_with_gradient_red(img_fname):
 def build_palette_dictionary(palette_fname):
     """
     read the palette fname (CSV) and populate the dictionary
-    using the first columna s the key and the RGB intensities
+    using the first column as the key and the RGB intensities
     as the value (as a tuple).
 
     NOTE: Make sure to use integer values!
@@ -137,7 +160,15 @@ def build_palette_dictionary(palette_fname):
     return the dictionary
     """
     my_palette_dict = dict()
-
+    with open(palette_fname, 'r') as target_file:
+         my_reader = csv.reader(target_file)
+         for row in my_reader:
+             key = int(row[0])
+             red = int(row[1])
+             green = int(row[2])
+             blue = int(row[3])
+             my_tuple = (red, green, blue)
+             my_palette_dict[key] = my_tuple
     return my_palette_dict
 
 
@@ -164,4 +195,32 @@ def build_image_using_palette(img_fname, palette_dict):
     Now, using the value, find the RGB color in the palette.  Set the
     pixel to that color
     """
+
+    my_image = Image.new('RGB', (512,512) )
+    my_image_pixels = my_image.load()
+
+    # get the image size
+    image_x_size = my_image.size[0]
+    image_y_size = my_image.size[1]
+
+    # iterate over x and y to pick the pixel color
+    for x in range(image_x_size):
+        for y in range(image_y_size):
+            x_2 = x**2
+            y_2 = y**2
+            abs_value = abs((x_2 - y_2))
+            mult_xy = (x * y) * 2
+            added_xy = abs_value + mult_xy
+            square_root = int(sqrt(added_xy))
+            divided = (square_root % 355)
+            my_tuple = palette_dict[divided]
+
+            # pick the pixel color as an RGB tuple
+            pixel_color = my_tuple
+
+            # set the color to the image
+            my_image_pixels[x, y] = pixel_color
+
+    print(f'saving {img_fname}')
+    my_image.save(img_fname, 'png')
     pass
